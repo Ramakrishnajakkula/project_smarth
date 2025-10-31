@@ -11,7 +11,6 @@ logs/
 
 # Data
 /data/raw/
-/data/processed/
 /data/cache/
 
 # Virtual environments
