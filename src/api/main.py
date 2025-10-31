@@ -40,6 +40,12 @@ class DBPingResponse(BaseModel):
     error: Optional[str] = None
 
 
+@app.get("/health")
+async def health_check():
+    # Lightweight health endpoint for container orchestrators
+    return {"status": "ok", "version": app.version}
+
+
 @app.get("/", response_model=HealthResponse)
 async def root():
     return HealthResponse(status="healthy", version="0.1.0", timestamp=datetime.now())
