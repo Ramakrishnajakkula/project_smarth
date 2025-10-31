@@ -24,5 +24,14 @@ COPY data/processed ./data/processed
 # Expose the API port
 EXPOSE 8000
 
+# Add a simple container healthcheck hitting the internal /health endpoint
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=5 \
+    CMD python -c "import os,sys,urllib.request; port=int(os.environ.get('PORT','8000')); url=f'http://127.0.0.1:{port}/health';\
+try:\
+        with urllib.request.urlopen(url, timeout=4) as r:\
+                sys.exit(0 if r.status==200 else 1)\
+except Exception:\
+        sys.exit(1)"
+
 # Start the FastAPI app; PORT is provided by most PaaS (default 8000)
 CMD ["sh", "-c", "uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8000} --loop asyncio --http h11"]
