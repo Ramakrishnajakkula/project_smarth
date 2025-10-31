@@ -43,6 +43,88 @@ Tips
 
 ---
 
+### 1A) Alternative: Deploy API to Render (Free Web Service)
+
+Render provides a free web service that can run a Python web server. You can deploy manually or via the included `deploy/render.yaml`.
+
+Option A — One-click via render.yaml
+
+1. Push this repo to GitHub.
+2. In Render, create a new "Blueprint" from your repo; it will detect `deploy/render.yaml`.
+3. Set required environment variables in the Render Dashboard under the service:
+   - `MONGODB_URI` (required)
+   - `MONGODB_DB` (default `samarth`)
+   - Optional: `HF_API_TOKEN`, `DATA_GOV_IN_API_KEY`, `CACHE_ENABLED`, `CACHE_TTL_SECONDS`, `LOG_QUERIES`
+4. Deploy. Render will run:
+   - Build: `pip install -r requirements.txt`
+   - Start: `uvicorn src.api.main:app --host 0.0.0.0 --port $PORT`
+5. When live, note the public URL and test `/`, `/db/ping`, and `/query`.
+
+Option B — Manual Web Service
+
+1. Create a "Web Service" from your GitHub repo.
+2. Runtime: Python; Build command: `pip install -r requirements.txt`.
+3. Start command: `uvicorn src.api.main:app --host 0.0.0.0 --port $PORT`.
+4. Set env vars as above; deploy and test.
+
+Notes
+
+- Include your processed CSVs in the repository (under `data/processed/...`) or add a startup step to generate them. Free tiers typically don’t offer persistent disks.
+- If the UI is on Streamlit Cloud, set its `API_BASE_URL` secret to the Render URL.
+
+---
+
+### 1B) Alternative: Deploy API to Koyeb (Free)
+
+Koyeb can run your API from a Dockerfile on a free plan.
+
+1. Ensure the repository includes the provided `Dockerfile` at the root.
+2. Push the repo to GitHub (or connect your GitHub account in Koyeb).
+3. In Koyeb, create a new Service → "Deploy from GitHub" and select this repo.
+4. Build strategy: Dockerfile; Build & run should auto-detect the Dockerfile.
+5. Set environment variables:
+   - `MONGODB_URI` (required)
+   - `MONGODB_DB` (e.g., `samarth`)
+   - Optional: `HF_API_TOKEN`, `DATA_GOV_IN_API_KEY`, `CACHE_ENABLED`, `CACHE_TTL_SECONDS`, `LOG_QUERIES`
+6. Deploy. Koyeb will build the container and run `uvicorn` using the Dockerfile `CMD`.
+7. When live, test your public URL for `/`, `/db/ping`, and `/query`.
+
+Notes
+
+- The image bundles `data/processed/...` from the repo so the CSV endpoints work on first boot.
+- If you regenerate processed files at build time, ensure the Dockerfile copies them into the image.
+- If you later restrict CORS, add your Streamlit domain to allowed origins.
+
+---
+
+### 1C) Alternative: Deploy API to Hugging Face Spaces (Docker, Free)
+
+Hugging Face Spaces can run a Dockerized API for free (no card required).
+
+1. Ensure the repo contains the provided `Dockerfile` at the root (already added).
+2. Create a new Space at https://huggingface.co/spaces → Select "Docker" for the SDK.
+3. Connect this GitHub repo or upload the files.
+4. In the Space Settings → Secrets, add:
+   - `MONGODB_URI` (required)
+   - `MONGODB_DB` (e.g., `samarth`)
+   - Optional: `HF_API_TOKEN`, `DATA_GOV_IN_API_KEY`, `CACHE_ENABLED`, `CACHE_TTL_SECONDS`, `LOG_QUERIES`
+5. Deploy the Space. The Dockerfile starts `uvicorn` binding to `${PORT}` exposed by Spaces.
+6. Test the Space URL (`/`, `/db/ping`, `/query`).
+
+Notes
+
+- The Docker image includes `data/processed/...` from the repository for the CSV endpoints.
+- If you regenerate processed files during build, ensure the Dockerfile copies them.
+- Spaces may sleep; first request can be slower (cold start).
+
+---
+
+### 1D) Note on Vercel (Hobby)
+
+Vercel’s Hobby tier is free, but may prompt for payment verification depending on region/features. Running FastAPI on Vercel typically uses Python Serverless Functions and may require restructuring the project into `api/*.py` handlers or using a custom adapter. If you prefer Vercel, we can add a minimal serverless handler (and `vercel.json`) in a follow-up, but for a no-card path, prefer Deta Space or Hugging Face Spaces.
+
+---
+
 ## 2) Deploy Streamlit UI to Streamlit Community Cloud
 
 1. Push this repo to GitHub if you haven't already.

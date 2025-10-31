@@ -197,7 +197,7 @@ See `deploy/DEPLOYMENT.md` for step-by-step instructions to deploy:
 - API (FastAPI) to Deta Space
 - UI (Streamlit) to Streamlit Community Cloud
 
-You’ll set environment variables in the hosting dashboards. Ensure `MONGODB_URI` and `MONGODB_DB` are configured on the API host, and `API_BASE_URL` is set as a secret for the Streamlit app.
+Alternatives included: Render (free) and Koyeb (free, Dockerfile-based). You’ll set environment variables in the hosting dashboards. Ensure `MONGODB_URI` and `MONGODB_DB` are configured on the API host, and `API_BASE_URL` is set as a secret for the Streamlit app.
 
 ## MongoDB Atlas M0 (Phase 6)
 
@@ -224,5 +224,6 @@ If it prints "MongoDB setup complete", you’re good to go. The API’s `/db/pin
 
 - Keep costs zero: avoid paid API keys; OpenAI is optional and off by default.
 - Python 3.8 compatible versions are pinned in `requirements.txt`.
-#   p r o j e c t _ s m a r t h  
- 
+  #   p r o j e c t _ s m a r t h 
+   
+   

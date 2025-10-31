@@ -1,0 +1,25 @@
+# Exclude local/dev files from the Docker build context
+
+.git
+.gitignore
+.venv
+**pycache**
+_.pyc
+_.pyo
+\*.pyd
+.mypy_cache
+.pytest_cache
+
+# Large or dev-only data; keep processed outputs included
+
+data/raw
+data/tmp
+
+# Not needed in the image
+
+tests
+deploy
+ui
+README.md
+PROJECT_SAMARTH_PLAN.md
+PROJECT_SAMARTH_TRACKER.md

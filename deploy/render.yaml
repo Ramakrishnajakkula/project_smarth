@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: samarth-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: MONGODB_URI
+        # Set in Render Dashboard as a Secret
+        value: ""
+      - key: MONGODB_DB
+        value: "samarth"
+      - key: HF_API_TOKEN
+        value: ""
+      - key: DATA_GOV_IN_API_KEY
+        value: ""
+      - key: CACHE_ENABLED
+        value: "false"
+      - key: CACHE_TTL_SECONDS
+        value: "600"
+      - key: LOG_QUERIES
+        value: "false"
