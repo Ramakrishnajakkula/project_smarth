@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python deps (API-only for Space)
+COPY requirements.api.txt ./
+RUN pip install --no-cache-dir -r requirements.api.txt
 
 # Copy source and processed data used by the API endpoints
 COPY src ./src
