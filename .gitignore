@@ -1,0 +1,19 @@
+# Environment
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+logs/
+
+# Data
+/data/raw/
+/data/processed/
+/data/cache/
+
+# Virtual environments
+.venv/
+venv/

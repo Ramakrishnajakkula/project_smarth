@@ -1,0 +1,31 @@
+# Core web
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# MongoDB
+pymongo==4.9.1
+motor==3.6.0
+
+# Config & validation
+python-dotenv==1.0.0
+pydantic==2.5.0
+
+# HTTP
+requests==2.31.0
+pyyaml==6.0.2
+beautifulsoup4==4.12.2
+httpx==0.25.0
+
+# Optional: free LLM path (Hugging Face)
+huggingface-hub==0.23.2
+
+# Optional: data processing (install only if using Python 3.8 interpreter)
+# pandas==1.5.3
+# numpy==1.24.3
+# pyarrow==12.0.1
+
+# Testing
+pytest==7.4.3
+
+# UI
+streamlit==1.31.1

@@ -1,0 +1,524 @@
+# version: 1
+# # Dataset configuration for Project Samarth
+# # All URLs point to free, publicly accessible government data sources
+# # Last updated: 2025-10-29 by ramakrishna-18
+
+# datasets:
+#   # ==================== AGRICULTURE DATASETS ====================
+  
+#   - key: agriculture_crop_production_state_year
+#     name: Crop production by state and year
+#     domain: agriculture
+#     url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+#     format: csv
+#     expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+#     actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+#     notes: |
+#       Comprehensive APY (Area, Production, Yield) dataset from Ministry of Agriculture.
+#       Coverage: 1997-2023, District-wise, Crop-wise, Season-wise
+#       Production in tonnes, Area in hectares
+#       Source: India Data Portal (CKAN) - Directorate of Economics & Statistics
+#     source_agency: Ministry of Agriculture & Farmers Welfare
+#     last_verified: 2025-10-29
+
+#   - key: agriculture_crop_yield_state_year
+#     name: Crop yield by state and year
+#     domain: agriculture
+#     url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+#     format: csv
+#     expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Yield]
+#     actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+#     notes: |
+#       Same dataset as above - Yield can be calculated as Production/Area
+#       Or derive from Production and Area columns
+#       Yield typically in tonnes per hectare (t/ha)
+#       NOTE: Download once and derive yield programmatically
+#     source_agency: Ministry of Agriculture & Farmers Welfare
+#     calculation: "Yield = Production / Area (where Area > 0)"
+#     last_verified: 2025-10-29
+
+#   - key: agriculture_area_state_year
+#     name: Area under cultivation by state and year
+#     domain: agriculture
+#     url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+#     format: csv
+#     expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area]
+#     actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+#     notes: |
+#       Same comprehensive APY dataset
+#       Area column represents hectares under cultivation
+#       Can be aggregated at state/crop/year level from district data
+#       NOTE: Single download serves all three agriculture needs (APY)
+#     source_agency: Ministry of Agriculture & Farmers Welfare
+#     last_verified: 2025-10-29
+
+#   # ==================== CLIMATE DATASETS ====================
+
+#   - key: climate_rainfall_state_year
+#     name: Rainfall by state and year
+#     domain: climate
+#     url: "https://data.gov.in/resource/daily-rainfall-state-level-2009-2023"
+#     api_endpoint: "https://api.data.gov.in/resource/7cfe2a0c-e5da-493d-adda-88e9af81d5bf"
+#     alternative_url: "https://imdpune.gov.in/Clim_Pred_LRF_New/Monitoring/rf.php"
+#     format: csv
+#     expected_columns: [State, Year, Month, Actual_Rainfall_mm, Normal_Rainfall_mm, Deviation]
+#     actual_columns: [state_name, year, month, actual, normal, deviation_percent]
+#     notes: |
+#       IMD Daily Rainfall Data at State Level
+#       Coverage: 2009-2023 (updated regularly)
+#       Actual rainfall, normal rainfall, and deviation percentage
+#       Monthly data - aggregate to annual for yearly analysis
+      
+#       API Access requires registration at data.gov.in:
+#       1. Create account at https://data.gov.in
+#       2. Get API key from profile
+#       3. Use resource ID: 7cfe2a0c-e5da-493d-adda-88e9af81d5bf
+      
+#       Alternative: Download from IMD Pune portal (manual)
+#     source_agency: India Meteorological Department (IMD)
+#     last_verified: 2025-10-29
+    
+#   - key: climate_rainfall_subdivision_historical
+#     name: Rainfall by subdivision (historical 1901-2024)
+#     domain: climate
+#     url: "https://www.imdpune.gov.in/cmpg/Griddata/Rainfall_25_NetCDF.html"
+#     csv_alternative: "https://dataful.in/api/datasets/21444/download"
+#     format: csv
+#     expected_columns: [Year, Month, Subdivision, Rainfall_mm]
+#     actual_columns: [YEAR, JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC, ANNUAL, Subdivision]
+#     notes: |
+#       Long-term historical rainfall data by IMD subdivision (~state level)
+#       Coverage: 1901-2024
+#       Monthly and annual totals
+#       Subdivisions roughly correspond to states/regions
+#       Best for trend analysis and correlation studies
+      
+#       Note: May require transformation (wide to long format)
+#     source_agency: India Meteorological Department (IMD)
+#     last_verified: 2025-10-29
+
+#   - key: climate_temperature_state_year
+#     name: Temperature by state and year
+#     domain: climate
+#     url: "https://www.imdpune.gov.in/cmpg/Griddata/Temperature_25_NetCDF.html"
+#     csv_alternative: "https://data.gov.in/resource/mean-maximum-minimum-temperature-district-level"
+#     format: csv
+#     expected_columns: [State, District, Year, Month, Mean_Temp_C, Max_Temp_C, Min_Temp_C]
+#     actual_columns: [state, district, year, month, mean_temp, max_temp, min_temp]
+#     notes: |
+#       Temperature data at district/station level from IMD
+#       Coverage: Varies by station (typically 1969-present)
+#       Includes mean, maximum, and minimum temperatures
+      
+#       Access methods:
+#       1. IMD Gridded Data (NetCDF format - requires processing)
+#       2. data.gov.in API (requires API key)
+#       3. Direct download from IMD regional centers
+      
+#       For simplified access, use IMD Pune Climate Division portal
+#       or data.gov.in search for "temperature district"
+#     source_agency: India Meteorological Department (IMD)
+#     last_verified: 2025-10-29
+#     requires_processing: true
+
+# # ==================== ADDITIONAL USEFUL DATASETS ====================
+
+# additional_datasets:
+#   - key: agriculture_soil_health
+#     name: Soil Health Card Data
+#     url: "https://data.gov.in/dataset-group-name/Soil%20Health%20Card"
+#     format: csv
+#     notes: Optional - for advanced crop-soil analysis
+    
+#   - key: agriculture_market_prices
+#     name: Agricultural Market Prices (AGMARKNET)
+#     url: "https://agmarknet.gov.in/Default.aspx"
+#     format: api
+#     notes: Optional - market price data for economic analysis
+
+#   - key: climate_drought_index
+#     name: Drought Indices and Monitoring
+#     url: "https://vedas.sac.gov.in/drought/"
+#     format: geojson
+#     notes: Optional - drought severity data
+
+# # ==================== DATA ACCESS INSTRUCTIONS ====================
+
+# access_instructions:
+#   data_gov_in_api:
+#     registration_url: "https://data.gov.in/user/register"
+#     api_key_location: "Profile > API Key"
+#     rate_limit: "1000 calls per hour (free tier)"
+#     documentation: "https://data.gov.in/help/api"
+    
+#   imd_data_access:
+#     gridded_data_url: "https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_NetCDF.html"
+#     format: "NetCDF (requires xarray, netCDF4 libraries)"
+#     note: "May require email request for bulk historical data"
+#     contact: "climatemonitoring@imd.gov.in"
+
+#   alternative_sources:
+#     - name: "India Data Portal (CKAN)"
+#       url: "https://indiadataportal.com"
+#       note: "Pre-processed CSV downloads, no registration needed"
+    
+#     - name: "Dataful.in"
+#       url: "https://dataful.in"
+#       note: "Curated datasets with cleaner formatting"
+
+# # ==================== DOWNLOAD PRIORITY ====================
+
+# download_priority:
+#   essential:
+#     - agriculture_crop_production_state_year  # Single file covers Area, Production, Yield
+#     - climate_rainfall_state_year             # Recent rainfall data
+    
+#   recommended:
+#     - climate_rainfall_subdivision_historical  # For long-term trends
+    
+#   optional:
+#     - climate_temperature_state_year           # If temperature analysis needed
+#     - agriculture_soil_health                  # For advanced features
+#     - agriculture_market_prices                # For economic insights
+
+# # ==================== PROCESSING NOTES ====================
+
+# processing_notes:
+#   agriculture_data:
+#     - "Single APY CSV contains Area, Production, AND Yield data"
+#     - "District-level data can be aggregated to state level"
+#     - "Filter by Season (Kharif/Rabi/Whole Year) as needed"
+#     - "Crop names need standardization (Rice vs Paddy, etc.)"
+#     - "Some districts may have missing years - handle NaN values"
+    
+#   climate_data:
+#     - "Rainfall data often in wide format - needs reshaping to long"
+#     - "Monthly data needs aggregation to annual for yearly analysis"
+#     - "State names may differ from agriculture data - create mapping"
+#     - "IMD subdivisions ≠ exact state boundaries - use lookup table"
+#     - "NetCDF files require specialized libraries (xarray)"
+    
+#   data_integration:
+#     - "Create state name mapping dictionary (IMD ↔ Agriculture)"
+#     - "Year ranges differ - find common period (2009-2023 recommended)"
+#     - "Time granularity: Agriculture is yearly, Climate can be daily/monthly"
+#     - "Use fuzzy matching for district names if needed"
+
+# # ==================== VALIDATION CHECKLIST ====================
+
+# validation:
+#   - check: "File downloads successfully"
+#     test: "pd.read_csv(url) returns DataFrame"
+    
+#   - check: "Expected columns present"
+#     test: "All expected_columns in df.columns"
+    
+#   - check: "Data coverage adequate"
+#     test: "At least 5 years of overlapping data for both domains"
+    
+#   - check: "State names consistent"
+#     test: "States in both datasets match after normalization"
+    
+#   - check: "No excessive missing values"
+#     test: "< 20% NaN in critical columns (Production, Rainfall)"
+
+# # ==================== CITATION INFORMATION ====================
+
+# citations:
+#   agriculture_data: |
+#     Directorate of Economics & Statistics, Department of Agriculture & Farmers Welfare,
+#     Ministry of Agriculture & Farmers Welfare, Government of India.
+#     "District-wise, Crop-wise Area, Production and Yield Statistics (APY)".
+#     Available at: https://data.gov.in/
+    
+#   climate_data: |
+#     India Meteorological Department (IMD), Ministry of Earth Sciences, Government of India.
+#     "Rainfall and Temperature Statistics".
+#     Available at: https://imdpune.gov.in/ and https://data.gov.in/
+    
+#   platform: |
+#     Open Government Data (OGD) Platform India. https://data.gov.in/
+#     India Data Portal (CKAN). https://indiadataportal.com/
+
+
+version: 1
+# Dataset configuration for Project Samarth
+# Updated with verified working URLs
+# Date: 2025-10-29 by ramakrishna-18
+
+datasets:
+  # ==================== AGRICULTURE DATASETS ====================
+  
+  - key: agriculture_crop_production_state_year
+    name: Crop production by state and year
+    domain: agriculture
+    url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+    format: csv
+    expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+    actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+    notes: |
+      Comprehensive APY (Area, Production, Yield) dataset from Ministry of Agriculture.
+      Coverage: 1997-2023, District-wise, Crop-wise, Season-wise
+      Production in tonnes, Area in hectares
+      Source: India Data Portal (CKAN) - Directorate of Economics & Statistics
+    source_agency: Ministry of Agriculture & Farmers Welfare
+    last_verified: 2025-10-29
+
+  - key: agriculture_crop_yield_state_year
+    name: Crop yield by state and year
+    domain: agriculture
+    url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+    format: csv
+    expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Yield]
+    actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+    notes: |
+      Same dataset as above - Yield can be calculated as Production/Area
+      Or derive from Production and Area columns
+      Yield typically in tonnes per hectare (t/ha)
+      NOTE: Download once and derive yield programmatically
+    source_agency: Ministry of Agriculture & Farmers Welfare
+    calculation: "Yield = Production / Area (where Area > 0)"
+    last_verified: 2025-10-29
+
+  - key: agriculture_area_state_year
+    name: Area under cultivation by state and year
+    domain: agriculture
+    url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+    format: csv
+    expected_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area]
+    actual_columns: [State_Name, District_Name, Crop_Year, Season, Crop, Area, Production]
+    notes: |
+      Same comprehensive APY dataset
+      Area column represents hectares under cultivation
+      Can be aggregated at state/crop/year level from district data
+      NOTE: Single download serves all three agriculture needs (APY)
+    source_agency: Ministry of Agriculture & Farmers Welfare
+    last_verified: 2025-10-29
+
+  # ==================== CLIMATE DATASETS ====================
+
+  - key: climate_rainfall_state_year
+    name: Rainfall by state and year (2009-2023)
+    domain: climate
+    url: "https://ckandev.indiadataportal.com/dataset/climate-data/resource/5bddf229-7ce5-4c5b-895b-411f801f26e9"
+    format: csv
+    expected_columns: [state_name, year, month, actual, normal, deviation_percent]
+    actual_columns: [state_name, year, month, actual, normal, deviation_percent]
+    notes: |
+      IMD Daily Rainfall Data at State Level
+      Coverage: 2009-2023 (updated regularly)
+      Actual rainfall, normal rainfall, and deviation percentage
+      Monthly data - aggregate to annual for yearly analysis
+      Best for recent period analysis
+    source_agency: India Meteorological Department (IMD)
+    last_verified: 2025-10-29
+    
+  - key: climate_rainfall_subdivision_historical
+    name: Rainfall by subdivision (historical 1901-2017)
+    domain: climate
+    url: "https://raw.githubusercontent.com/dcsavinod/weather-and-rainfall-data-from-1901-to-2022/main/Rainfall_State_Analysis_India_1901_2017.csv"
+    backup_url: "https://www.data.gov.in/catalog/rainfall-india"
+    format: csv
+    expected_columns: [SUBDIVISION, YEAR, JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC, ANNUAL]
+    actual_columns: [SUBDIVISION, YEAR, JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC, ANNUAL, Jan-Feb, Mar-May, Jun-Sep, Oct-Dec]
+    notes: |
+      ✅ VERIFIED WORKING LINK - GitHub Repository
+      Long-term historical rainfall data by IMD subdivision (~state level)
+      Coverage: 1901-2017 (117 years of data!)
+      Monthly columns in wide format + seasonal aggregations
+      Subdivisions roughly correspond to states/regions
+      Perfect for long-term trend analysis and correlation studies
+      
+      Data structure: Wide format (months as columns)
+      You'll need to pivot to long format for analysis:
+      SUBDIVISION, YEAR, MONTH, RAINFALL_MM
+      
+      Backup: If GitHub link fails, download manually from data.gov.in
+    source_agency: India Meteorological Department (IMD)
+    github_repo: "https://github.com/dcsavinod/weather-and-rainfall-data-from-1901-to-2022"
+    last_verified: 2025-10-29
+    requires_reshaping: true
+
+  - key: climate_rainfall_ogd_platform
+    name: Rainfall datasets from OGD Platform (multiple formats)
+    domain: climate
+    url: "https://www.data.gov.in/catalog/rainfall-india"
+    format: web_catalog
+    expected_columns: [varies_by_dataset]
+    notes: |
+      Open Government Data Platform catalog page for rainfall
+      Contains multiple datasets with different granularities:
+      - Subdivision-wise monthly (1901-2017)
+      - Area-weighted seasonal (1901-2015)
+      - All-India monthly and annual
+      - District-wise rainfall
+      
+      Browse the catalog and select specific datasets
+      Most datasets available in CSV/XLS format
+      May require free OGD account for API access
+    source_agency: India Meteorological Department (IMD)
+    access_type: catalog_browse
+    last_verified: 2025-10-29
+
+  - key: climate_temperature_state_year
+    name: Temperature by state and year
+    domain: climate
+    url: "https://ckandev.indiadataportal.com/dataset/climate-data"
+    format: web_catalog
+    expected_columns: [State, District, Year, Month, Mean_Temp_C, Max_Temp_C, Min_Temp_C]
+    notes: |
+      Temperature data at district/station level from IMD
+      Coverage: Varies by station (typically 1969-present)
+      Includes mean, maximum, and minimum temperatures
+      
+      Access methods:
+      1. Browse India Data Portal climate catalog
+      2. Look for "temperature" datasets
+      3. Download specific state/region files
+      
+      Alternative: Use IMD gridded data (NetCDF) and convert to CSV
+      For simplified access, focus on rainfall first (more critical for agriculture)
+    source_agency: India Meteorological Department (IMD)
+    priority: optional
+    last_verified: 2025-10-29
+
+# ==================== ADDITIONAL USEFUL DATASETS ====================
+
+additional_datasets:
+  - key: climate_rainfall_all_india_monthly
+    name: All-India Monthly and Seasonal Rainfall (1901-2015)
+    url: "https://www.data.gov.in/catalog/rainfall-india"
+    format: csv
+    notes: |
+      Area-weighted all-India rainfall
+      Monthly, seasonal, and annual totals
+      Good for national-level trend analysis
+      Available through OGD platform - browse catalog
+    
+  - key: agriculture_soil_health
+    name: Soil Health Card Data
+    url: "https://www.data.gov.in/dataset-group-name/Soil%20Health%20Card"
+    format: csv
+    notes: Optional - for advanced crop-soil analysis
+    
+  - key: agriculture_market_prices
+    name: Agricultural Market Prices (AGMARKNET)
+    url: "https://agmarknet.gov.in/Default.aspx"
+    format: api
+    notes: Optional - market price data for economic analysis
+
+# ==================== DOWNLOAD PRIORITY (UPDATED) ====================
+
+download_priority:
+  essential:
+    - agriculture_crop_production_state_year  # Single file covers Area, Production, Yield
+    - climate_rainfall_state_year             # Recent rainfall (2009-2023)
+    - climate_rainfall_subdivision_historical # Historical rainfall (1901-2017) ✅ NOW WORKING
+    
+  recommended:
+    - climate_rainfall_ogd_platform           # Browse for additional datasets
+    
+  optional:
+    - climate_temperature_state_year          # If temperature analysis needed
+    - agriculture_soil_health                 # For advanced features
+    - agriculture_market_prices               # For economic insights
+
+# ==================== DIRECT DOWNLOAD LINKS (QUICK REFERENCE) ====================
+
+quick_download_links:
+  agriculture_apy:
+    url: "https://ckandev.indiadataportal.com/dataset/80789131-1b7d-4809-a03e-7ce88cee2917/resource/ead44f5f-6471-48ec-a488-4b5894302aaa/download/crop-wise-area-production-yield.csv"
+    size: "~50-100 MB"
+    rows: "~1.5 million"
+    
+  climate_rainfall_recent:
+    url: "https://ckandev.indiadataportal.com/dataset/climate-data/resource/5bddf229-7ce5-4c5b-895b-411f801f26e9"
+    size: "~10-20 MB"
+    rows: "~200,000"
+    
+  climate_rainfall_historical:
+    url: "https://raw.githubusercontent.com/dcsavinod/weather-and-rainfall-data-from-1901-to-2022/main/Rainfall_State_Analysis_India_1901_2017.csv"
+    size: "~500 KB"
+    rows: "~4,000"
+    verified: true
+    status: "✅ WORKING"
+
+# ==================== DATA RESHAPING NOTES ====================
+
+reshaping_required:
+  climate_rainfall_subdivision_historical:
+    current_format: "WIDE (months as columns)"
+    current_structure: |
+      SUBDIVISION | YEAR | JAN | FEB | MAR | ... | DEC | ANNUAL
+      Kerala      | 1901 | 15  | 20  | 100 | ... | 50  | 3000
+    
+    target_format: "LONG (tidy data)"
+    target_structure: |
+      SUBDIVISION | YEAR | MONTH | RAINFALL_MM
+      Kerala      | 1901 | 1     | 15
+      Kerala      | 1901 | 2     | 20
+      Kerala      | 1901 | 3     | 100
+    
+    code_snippet: |
+      import pandas as pd
+      
+      # Load wide format
+      df = pd.read_csv('rainfall_historical.csv')
+      
+      # Melt to long format
+      month_cols = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 
+                    'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+      
+      df_long = df.melt(
+          id_vars=['SUBDIVISION', 'YEAR'],
+          value_vars=month_cols,
+          var_name='MONTH',
+          value_name='RAINFALL_MM'
+      )
+      
+      # Convert month names to numbers
+      month_map = {'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 
+                   'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
+                   'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12}
+      df_long['MONTH'] = df_long['MONTH'].map(month_map)
+      
+      # Save
+      df_long.to_csv('rainfall_historical_long.csv', index=False)
+
+# ==================== VALIDATION & TESTING ====================
+
+validation:
+  - check: "GitHub historical rainfall link works"
+    test: "curl -I https://raw.githubusercontent.com/.../Rainfall_State_Analysis_India_1901_2017.csv"
+    status: "✅ VERIFIED 2025-10-29"
+    
+  - check: "India Data Portal APY link works"
+    test: "pd.read_csv(url, nrows=5)"
+    status: "✅ VERIFIED 2025-10-29"
+    
+  - check: "Climate data portal accessible"
+    test: "requests.get(url).status_code == 200"
+    status: "✅ VERIFIED 2025-10-29"
+
+# ==================== CITATION INFORMATION ====================
+
+citations:
+  agriculture_data: |
+    Directorate of Economics & Statistics, Department of Agriculture & Farmers Welfare,
+    Ministry of Agriculture & Farmers Welfare, Government of India.
+    "District-wise, Crop-wise Area, Production and Yield Statistics (APY)".
+    Available at: https://data.gov.in/
+    
+  climate_data_github: |
+    Savinod, DC (2022). "Weather and Rainfall Data from 1901 to 2022".
+    GitHub Repository. Source: India Meteorological Department.
+    Available at: https://github.com/dcsavinod/weather-and-rainfall-data-from-1901-to-2022
+    
+  climate_data_imd: |
+    India Meteorological Department (IMD), Ministry of Earth Sciences, Government of India.
+    "Rainfall and Temperature Statistics".
+    Available at: https://imdpune.gov.in/ and https://data.gov.in/
+    
+  platform: |
+    Open Government Data (OGD) Platform India. https://data.gov.in/
+    India Data Portal (CKAN). https://indiadataportal.com/
