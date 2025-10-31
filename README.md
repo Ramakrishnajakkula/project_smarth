@@ -1,3 +1,12 @@
+---
+title: Project Samarth API
+emoji: 🌦️
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 # Project Samarth — Minimal API Scaffold
 
 This repo contains a minimal FastAPI scaffold with MongoDB wiring aligned to Python 3.8, MongoDB (Atlas M0), and free-tier services (Hugging Face for LLMs).
