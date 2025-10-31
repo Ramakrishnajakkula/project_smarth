@@ -6,7 +6,7 @@ from ..utils.config import settings
 from ..db.mongo import ping as mongo_ping, get_collection
 from pathlib import Path
 import csv
-from typing import Any
+from typing import Any, Dict, List, Optional
 from datetime import datetime, timedelta
 from ..core.query_parser import parse_query
 from ..core.data_router import route_query
@@ -37,7 +37,7 @@ class HealthResponse(BaseModel):
 
 class DBPingResponse(BaseModel):
     ok: bool
-    error: str | None = None
+    error: Optional[str] = None
 
 
 @app.get("/", response_model=HealthResponse)
@@ -56,10 +56,10 @@ class QueryRequest(BaseModel):
 
 
 class QueryResponse(BaseModel):
-    parsed: dict
-    datasets: list[str]
-    citations: list[dict]
-    rows: list[dict]
+    parsed: Dict
+    datasets: List[str]
+    citations: List[Dict]
+    rows: List[Dict]
     answer: str
     answer_source: str
 
@@ -69,7 +69,7 @@ async def query_endpoint(req: QueryRequest):
     pq = parse_query(req.q)
     routed = route_query(pq)
     # Return a structured response to satisfy Phase 2 acceptance criteria
-    parsed_dict = {
+    parsed_dict: Dict = {
         "intent": pq.intent,
         "states": pq.states,
         "crops": pq.crops,
@@ -138,7 +138,7 @@ def _read_csv_rows(path: Path):
             yield row
 
 
-def _build_cache_key(endpoint: str, params: dict[str, Any]) -> str:
+def _build_cache_key(endpoint: str, params: Dict[str, Any]) -> str:
     items = sorted((k, v) for k, v in params.items() if v is not None)
     return f"{endpoint}|" + "&".join(f"{k}={v}" for k, v in items)
 
@@ -177,10 +177,10 @@ def _cache_store(key: str, data: Any):
         pass
 
 
-@app.get("/climate/state-annual", response_model=list[StateAnnual])
+@app.get("/climate/state-annual", response_model=List[StateAnnual])
 def get_state_annual(
-    state: str | None = Query(default=None, description="Filter by state name (exact match)"),
-    year: int | None = Query(default=None, description="Filter by year"),
+    state: Optional[str] = Query(default=None, description="Filter by state name (exact match)"),
+    year: Optional[int] = Query(default=None, description="Filter by year"),
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
 ):
@@ -190,7 +190,7 @@ def get_state_annual(
         return cached
 
     path = PROC / "rainfall_state_year.csv"
-    rows: list[dict] = []
+    rows: List[Dict] = []
     for row in _read_csv_rows(path):
         s = row.get("State") or row.get("state") or ""
         y = int((row.get("Year") or row.get("year") or 0))
@@ -208,10 +208,10 @@ def get_state_annual(
     return result
 
 
-@app.get("/climate/subdivision-annual", response_model=list[SubdivisionAnnual])
+@app.get("/climate/subdivision-annual", response_model=List[SubdivisionAnnual])
 def get_subdivision_annual(
-    subdivision: str | None = Query(default=None, description="Filter by subdivision name (exact match)"),
-    year: int | None = Query(default=None, description="Filter by year"),
+    subdivision: Optional[str] = Query(default=None, description="Filter by subdivision name (exact match)"),
+    year: Optional[int] = Query(default=None, description="Filter by year"),
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
 ):
@@ -221,7 +221,7 @@ def get_subdivision_annual(
         return cached
 
     path = PROC / "rainfall_subdivision_year.csv"
-    rows: list[dict] = []
+    rows: List[Dict] = []
     for row in _read_csv_rows(path):
         s = row.get("Subdivision") or row.get("subdivision") or ""
         y = int((row.get("Year") or row.get("year") or 0))
@@ -250,11 +250,11 @@ class CropAPYRow(BaseModel):
     Yield_t_per_ha: float
 
 
-@app.get("/agriculture/crop-apy-state-year", response_model=list[CropAPYRow])
+@app.get("/agriculture/crop-apy-state-year", response_model=List[CropAPYRow])
 def get_crop_apy_state_year(
-    state: str | None = Query(default=None, description="Filter by state (exact match)"),
-    crop: str | None = Query(default=None, description="Filter by crop (exact match)"),
-    year: str | None = Query(default=None, description="Filter by year label, e.g., 2000-01"),
+    state: Optional[str] = Query(default=None, description="Filter by state (exact match)"),
+    crop: Optional[str] = Query(default=None, description="Filter by crop (exact match)"),
+    year: Optional[str] = Query(default=None, description="Filter by year label, e.g., 2000-01"),
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
 ):
@@ -264,7 +264,7 @@ def get_crop_apy_state_year(
         return cached
 
     path = AG_PROC / "crop_apy_state_year.csv"
-    rows: list[dict] = []
+    rows: List[Dict] = []
     for row in _read_csv_rows(path):
         s = row.get("State", "")
         y = row.get("Year", "")
@@ -326,9 +326,9 @@ def _file_meta(path: Path, kind: str) -> dict:
     }
 
 
-@app.get("/datasets", response_model=list[dict])
+@app.get("/datasets", response_model=List[Dict])
 def list_datasets():
-    datasets: list[dict] = []
+    datasets: List[Dict] = []
     # Climate
     for p in (PROC.glob("*.csv")):
         datasets.append(_file_meta(p, "climate"))
@@ -338,9 +338,9 @@ def list_datasets():
     return datasets
 
 
-@app.get("/stats", response_model=dict)
+@app.get("/stats", response_model=Dict)
 def basic_stats():
-    stats: dict[str, Any] = {"climate": {}, "agriculture": {}}
+    stats: Dict[str, Any] = {"climate": {}, "agriculture": {}}
     # Climate counts
     state_year = PROC / "rainfall_state_year.csv"
     subdiv_year = PROC / "rainfall_subdivision_year.csv"

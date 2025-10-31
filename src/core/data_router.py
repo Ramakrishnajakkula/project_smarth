@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import csv
-from typing import Any
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .query_parser import ParsedQuery
 
@@ -11,7 +11,7 @@ AG_PROC = ROOT / "data" / "processed" / "agriculture"
 CL_PROC = ROOT / "data" / "processed" / "climate"
 
 
-def _read_csv(path: Path) -> list[dict[str, Any]]:
+def _read_csv(path: Path) -> List[Dict[str, Any]]:
     if not path.exists():
         return []
     with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -21,12 +21,12 @@ def _read_csv(path: Path) -> list[dict[str, Any]]:
 
 @dataclass
 class RoutedResult:
-    datasets: list[str]
-    citations: list[dict[str, str]]
-    rows: list[dict[str, Any]]
+    datasets: List[str]
+    citations: List[Dict[str, str]]
+    rows: List[Dict[str, Any]]
 
 
-def _filter_years(row_year: int | str, years: list[int], year_range: tuple[int, int] | None) -> bool:
+def _filter_years(row_year: Union[int, str], years: List[int], year_range: Optional[Tuple[int, int]]) -> bool:
     try:
         y = int(row_year)
     except Exception:
@@ -40,9 +40,9 @@ def _filter_years(row_year: int | str, years: list[int], year_range: tuple[int, 
 
 def route_query(pq: ParsedQuery) -> RoutedResult:
     # Default empty
-    datasets: list[str] = []
-    citations: list[dict[str, str]] = []
-    rows: list[dict[str, Any]] = []
+    datasets: List[str] = []
+    citations: List[Dict[str, str]] = []
+    rows: List[Dict[str, Any]] = []
 
     # Trend intent on rainfall by state
     if pq.intent == "trend" and ("rainfall" in pq.metrics or not pq.metrics):
