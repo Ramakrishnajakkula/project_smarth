@@ -1,7 +1,7 @@
 # Syntax: Dockerfile for deploying the FastAPI service
 # Free-tier friendly; uses Python 3.8 to match project constraint
 
-FROM python:3.8-slim-bullseye
+FROM python:3.10-slim-bullseye
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
