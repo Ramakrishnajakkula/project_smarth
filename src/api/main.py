@@ -82,6 +82,12 @@ async def query_endpoint(req: QueryRequest):
         "years": pq.years,
         "year_range": pq.year_range,
         "metrics": pq.metrics,
+        "aggregation": pq.aggregation,
+        "top_k": pq.top_k,
+        "group_by": pq.group_by,
+        "domain": pq.domain,
+        "last_n_years": pq.last_n_years,
+        "since_year": pq.since_year,
     }
     llm = llm_answer(parsed_dict, routed.rows, routed.citations)
     resp = QueryResponse(

@@ -121,13 +121,35 @@ def main():
         st.markdown("---")
         st.header("Samples")
         samples = [
-            "Show trend of rainfall in Kerala from 2009 to 2010",
+            # Trend
+            "Show trend of rainfall in Kerala from 2009 to 2012",
+            "Show wheat yield trend in Maharashtra since 2005",
+            # Comparison
+            "Compare rainfall in Karnataka vs Kerala between 2012 and 2016",
             "Compare rice yield across states in 2009",
-            "Show production of wheat in Punjab between 2012 and 2014",
+            # Ranking / Top-K
+            "Top 5 states with highest rainfall in 2010",
+            "Top 5 rice-producing states in 2015",
+            "Which state had the highest rainfall in 2010",
+            # Aggregations
+            "Average rainfall in Kerala over the last 5 years",
+            "Total wheat production in Punjab from 2012 to 2014",
         ]
         sample_q = st.selectbox("Pick a sample question", options=["(none)"] + samples, index=0)
         if sample_q != "(none)":
             st.session_state.input_q = sample_q
+        with st.expander("Prompt tips"):
+            st.markdown(
+                """
+                - Trend: “trend”, “over time”, or year ranges (e.g., 2010–2015) or relative periods (e.g., “last 5 years”, “since 2005”).
+                - Comparison: “compare A vs B”, “across states/crops”.
+                - Ranking: “top 5”, “highest/lowest”, “which state/crop …”.
+                - Aggregations: “average/mean”, “total/sum”, “min”, “max”.
+                - Metrics & domain: rainfall (climate); yield, production, area (agriculture).
+                - Filters: name states (e.g., Kerala, Punjab) and crops (e.g., Rice, Wheat) explicitly.
+                - Grouping hints: “across states/by state”, “across crops/by crop”.
+                """
+            )
         st.markdown("---")
         st.header("History")
         history: List[Dict[str, Any]] = st.session_state.get("history", [])
@@ -140,7 +162,12 @@ def main():
     # Main input area
     # Display resolved API URL without requiring session state
     st.caption(f"API: {base_url.strip() or 'http://127.0.0.1:8000'}")
-    q = st.text_area("Your question", key="input_q", height=80, placeholder="Ask about rainfall trends or crop APY...")
+    q = st.text_area(
+        "Your question",
+        key="input_q",
+        height=80,
+        placeholder="Examples: Top 5 states with highest rainfall in 2010; Average rainfall in Kerala last 5 years; Compare rice yield across states in 2009",
+    )
     cols = st.columns([1, 1, 6])
     ask = cols[0].button("Ask")
     clear = cols[1].button("Clear")

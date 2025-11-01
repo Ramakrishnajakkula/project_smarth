@@ -172,6 +172,25 @@ Example:
 curl -s -X POST http://127.0.0.1:8000/query -H "Content-Type: application/json" -d '{ "q": "Show trend of rainfall in Kerala from 2009 to 2010" }'
 ```
 
+### Prompt tips (UI and `/query`)
+
+You can ask natural questions in these patterns:
+
+- Trend: "trend", "over time", year ranges (e.g., 2010–2015) or relative periods ("last 5 years", "since 2005").
+- Comparison: "compare A vs B", "across states/crops".
+- Ranking: "top 5", "highest/lowest", "which state/crop …".
+- Aggregations: "average/mean", "total/sum", "min", "max".
+- Metrics & domain: rainfall (climate); yield, production, area (agriculture).
+- Filters: specify states (Kerala, Punjab) and crops (Rice, Wheat) explicitly.
+- Grouping hints: "across states/by state", "across crops/by crop".
+
+Examples:
+
+- "Average rainfall in Kerala over the last 5 years"
+- "Top 5 states with highest rainfall in 2010"
+- "Top 3 rice-producing states in 2015"
+- "Compare rice yield across states in 2009"
+
 ## Next steps
 
 - API: Deta Space (FastAPI)
