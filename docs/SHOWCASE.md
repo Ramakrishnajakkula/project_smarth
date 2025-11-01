@@ -39,37 +39,15 @@ If the embedded player doesn’t show up, open the RAW link directly:
 
 ## 🎬 Demo Video
 
-Inline player (will render on GitHub if supported by your browser):
+Inline player (will render directly on GitHub):
 
 <video controls preload="metadata" style="max-width:100%; border-radius:8px;">
   <source src="https://raw.githubusercontent.com/Ramakrishnajakkula/project_smarth/main/docs/assets/video.mp4" type="video/mp4" />
-</video>
   Sorry, your browser doesn't support embedded videos.
 </video>
 
-If the inline player doesn’t appear, open or download it directly: [View video](./assets/video.mp4)
+If the video doesn’t display above, [click here to view it directly (raw link)](https://raw.githubusercontent.com/Ramakrishnajakkula/project_smarth/main/docs/assets/video.mp4)
 
----
-
-### How to embed (examples)
-
-1) Local file (this repo)
-
-```html
-<video src="./assets/video.mp4" controls preload="metadata" style="max-width:100%; border-radius:8px;"></video>
-```
-
-2) GitHub CDN (user-images)
-
-```html
-<video src="https://user-images.githubusercontent.com/.../demo.mp4" controls style="max-width:100%; border-radius:8px;"></video>
-```
-
-> Tips:
-> - Keep the video under ~25–50 MB for quick loads. For large files (>50–100 MB), consider Git LFS or the GitHub user-images CDN.
-> - Some corporate networks block inline media; use the direct link above if the player doesn’t render.
-
----
 
 ## 🧭 What you can ask
 
