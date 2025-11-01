@@ -20,12 +20,15 @@ You can embed a demo video directly in this Markdown. Two easy options:
 1) Upload MP4 to this repo at `docs/assets/video.mp4` (recommended for quick sharing)
 
 ```html
-<!-- Drop your video at docs/assets/video.mp4 and this will play inline on GitHub -->
-<video src="./assets/video.mp4" controls preload="metadata" style="max-width:100%; border-radius:8px;">
+<!-- GitHub renders video reliably via the RAW URL (not the blob view). -->
+<video controls preload="metadata" style="max-width:100%; border-radius:8px;">
+  <source src="https://raw.githubusercontent.com/Ramakrishnajakkula/project_smarth/main/docs/assets/video.mp4" type="video/mp4" />
   Sorry, your browser doesn't support embedded videos.
 </video>
 
-If the embedded player doesn’t show up, you can also download or open it directly: [View video](./assets/video.mp4)
+If the embedded player doesn’t show up, open the RAW link directly:
+
+- [View video (raw link)](https://raw.githubusercontent.com/Ramakrishnajakkula/project_smarth/main/docs/assets/video.mp4)
 ```
 
 2) Or upload the MP4 via the GitHub web UI to get a CDN URL (user-images) and embed with HTML:
