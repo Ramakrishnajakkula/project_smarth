@@ -41,7 +41,9 @@ If the embedded player doesn’t show up, open the RAW link directly:
 
 Inline player (will render on GitHub if supported by your browser):
 
-<video src="./assets/video.mp4" controls preload="metadata" style="max-width:100%; border-radius:8px;">
+<video controls preload="metadata" style="max-width:100%; border-radius:8px;">
+  <source src="https://raw.githubusercontent.com/Ramakrishnajakkula/project_smarth/main/docs/assets/video.mp4" type="video/mp4" />
+</video>
   Sorry, your browser doesn't support embedded videos.
 </video>
 
