@@ -8,8 +8,8 @@
 param()
 
 function Fail($msg) {
-  Write-Error $msg
-  exit 1
+    Write-Error $msg
+    exit 1
 }
 
 if (-not $env:HF_TOKEN) { Fail "HF_TOKEN env var is required." }
@@ -30,17 +30,18 @@ Write-Host "[3/6] Creating Space (if not exists): $($env:HF_USERNAME)/$($env:HF_
 
 Write-Host "[4/6] Ensuring git repository is initialized..."
 if (-not (Test-Path ".git")) {
-  git init | Out-Null
-  git checkout -b main | Out-Null
+    git init | Out-Null
+    git checkout -b main | Out-Null
 }
 
 Write-Host "[5/6] Adding HF remote..."
 $remoteUrl = "https://huggingface.co/spaces/$($env:HF_USERNAME)/$($env:HF_SPACE)"
 $remotes = git remote
 if ($remotes -notmatch "^hf$") {
-  git remote add hf $remoteUrl
-} else {
-  git remote set-url hf $remoteUrl
+    git remote add hf $remoteUrl
+}
+else {
+    git remote set-url hf $remoteUrl
 }
 
 Write-Host "[6/6] Committing and pushing to HF Spaces..."
